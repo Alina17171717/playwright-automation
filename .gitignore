@@ -1,0 +1,17 @@
+# Byte-complited / optimized /
+__pycache__/
+*.py[cod]
+*$py.class
+
+#folders
+.idea/
+.pytest_cache/
+
+# reporting
+report/
+
+# log
+*.log
+
+# secure info
+secure.json
