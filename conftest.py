@@ -5,8 +5,9 @@ import pytest
 from pytest import fixture
 from playwright.sync_api import sync_playwright
 from page_objects.application import App
+from helpers.web_service import WebService
 from settings import *
-import settings
+from helpers.db import DataBase
 
 
 @fixture(autouse=True, scope='session')
@@ -14,6 +15,25 @@ def preconditions():
     logging.info('precondition started')
     yield
     logging.info('postcondition started')
+
+@fixture(scope='session')
+def get_web_service(request):
+    base_url = request.config.getini('base_url')
+    secure = request.config.getoption('--secure')
+    config = load_config(secure)
+    web = WebService(base_url)
+    web.login(**config['users']['usersRole1'])
+    yield web
+    web.close()
+
+@fixture(scope='session')
+def get_db(request):
+    path = request.config.getini('db_path')
+    db = DataBase(path)
+    yield db
+    db.close()
+
+
 
 
 @fixture(scope='session')
@@ -60,8 +80,20 @@ def desktop_app_auth(desktop_app, request):
     config = load_config(secure)
     app = desktop_app
     app.goto('/login')
-    app.login(**config)
+    app.login(**config['users']['usersRole1'])
     yield app
+
+
+@fixture(scope='session')
+def desktop_app_bob(get_browser, request):
+    secure = request.config.getoption('--secure')
+    config = load_config(secure)
+    base_url = request.config.getini('base_url')
+    app = App(get_browser, base_url=base_url, **BROWSER_OPTIONS)
+    app.goto('/login')
+    app.login(**config['users']['usersRole2'])
+    yield app
+    app.close()
 
 
 @fixture(scope='session', params=['iPhone 11', 'Pixel 2'])
@@ -87,7 +119,7 @@ def mobile_app_auth(mobile_app, request):
     config = load_config(secure)
     app = mobile_app
     app.goto('/login')
-    app.login(**config)
+    app.login(**config['users']['usersRole1'])
     yield app
 
 
@@ -96,6 +128,7 @@ def pytest_addoption(parser):
     parser.addoption('--device', action='store', default='')
     parser.addoption('--browser', action='store', default='chromium')
     parser.addini('base_url', help='base url of site under test', default='http://127.0.0.1:8000')
+    parser.addini('db_path', help='path to sqlite db file', default='D:\\PlaywrightTestMe\\TestMe-TCM\\db.sqlite3')
     parser.addini('headless', help='run browser in headless mode', default='True')
 
 def load_config(file):
