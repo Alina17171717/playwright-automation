@@ -125,8 +125,6 @@ def mobile_app_auth(mobile_app, request):
 
 def pytest_addoption(parser):
     parser.addoption('--secure', action='store', default='secure.json')
-    parser.addoption('--device', action='store', default='')
-    parser.addoption('--browser', action='store', default='chromium')
     parser.addini('base_url', help='base url of site under test', default='http://127.0.0.1:8000')
     parser.addini('db_path', help='path to sqlite db file', default='D:\\PlaywrightTestMe\\TestMe-TCM\\db.sqlite3')
     parser.addini('headless', help='run browser in headless mode', default='True')
