@@ -1,9 +1,4 @@
 from pytest import mark
-from playwright.sync_api import expect
-
-# після оновлення сторінки:
-# expect(desktop_app_auth.page.locator(f"text={test_name}")).not_to_be_visible(timeout=3000)
-
 
 ddt = {
     'argnames': 'name, description',
@@ -35,9 +30,7 @@ def test_delete_test_case(desktop_app_auth, get_web_service):
     desktop_app_auth.navigate_to('Test Cases')
     assert desktop_app_auth.check_test_exists(test_name)
     desktop_app_auth.test_cases.delete_test_by_name(test_name)
-    desktop_app_auth.navigate_to('Test Cases')
     assert not desktop_app_auth.check_test_exists(test_name)
-
 
 
 

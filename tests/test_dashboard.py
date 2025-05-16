@@ -11,7 +11,6 @@ def test_dashboard_data(desktop_app_auth):
 def test_multiple_roles(desktop_app_auth, desktop_app_bob, get_db):
     alice = desktop_app_auth
     bob = desktop_app_bob
-    alice.refresh_dashboard()
     before = alice.get_total_tests_stats()
     bob.navigate_to('Create new test')
     bob.create_test('test by bob', 'bob')

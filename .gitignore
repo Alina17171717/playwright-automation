@@ -9,10 +9,6 @@ __pycache__/
 
 # reporting
 report/
-allure-results/
-allure-report/
-report.xml
-
 
 # log
 *.log
